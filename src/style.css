@@ -8,7 +8,7 @@ body {
 #app {
 	position: fixed;
 	bottom: 1em;
-	z-index: 1;
+	z-index: 2;
 	display: flex;
 	justify-content: center;
 	text-align: center;
@@ -63,9 +63,17 @@ body {
 canvas.display {
 	position: fixed;
 	inset: 0;
+	z-index: 1;
 	width: 100dvw;
 	height: 100dvh;
 	background: #000;
+}
+
+video {
+	position: fixed;
+	height: 1px;
+	width: 1px;
+	opacity: 0;
 }
 
 @keyframes fadeIn {
