@@ -5,7 +5,7 @@ import fragmentShaderSrc from './fragmentShader.glsl';
 const MIN_N_STRIPS = 3;
 const MIN_REFRACTION_INTENSITY = 0;
 const MAX_REFRACTION_INTENSITY = 20;
-const MAX_EXPORT_DIMENSION = 3840;
+const MAX_EXPORT_DIMENSION = 4096;
 
 async function getWebcamStream(facingMode = 'user') {
 	const video = document.createElement('video');
@@ -15,7 +15,7 @@ async function getWebcamStream(facingMode = 'user') {
 		const constraints = {
 			video: {
 				facingMode,
-				width: 3840,
+				width: 4096,
 			},
 		};
 		const stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -57,6 +57,7 @@ async function main() {
 	});
 
 	function exportHighRes() {
+		displayShader.pause();
 		let exportWidth = video.videoWidth;
 		let exportHeight = video.videoHeight;
 		if (exportWidth > MAX_EXPORT_DIMENSION || exportHeight > MAX_EXPORT_DIMENSION) {
@@ -75,10 +76,11 @@ async function main() {
 		exportShader.updateUniforms({ u_refractionIntensity: refractionIntensity, u_nStrips: nStrips });
 		exportShader.updateTextures({ u_webcam: video });
 		document.body.appendChild(exportCanvas);
-		setTimeout(() => {
+		setTimeout(async () => {
 			exportShader.step(0);
-			exportShader.save('cut-glass');
+			await exportShader.save('cut-glass');
 			document.body.removeChild(exportCanvas);
+			play();
 		}, 8);
 	}
 
@@ -150,9 +152,12 @@ async function main() {
 		lastTapTime = currentTime;
 	});
 
-	displayShader.play(() => {
-		displayShader.updateTextures({ u_webcam: video });
-	});
+	function play() {
+		displayShader.play(() => {
+			displayShader.updateTextures({ u_webcam: video });
+		});
+	}
+	play();
 }
 
 document.addEventListener('DOMContentLoaded', main);
