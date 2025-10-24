@@ -4,7 +4,6 @@ import fragmentShaderSrc from './fragmentShader.glsl';
 
 const MIN_N_STRIPS = 3;
 const MIN_REFRACTION_INTENSITY = 0;
-const MAX_REFRACTION_INTENSITY = 20;
 const MAX_EXPORT_DIMENSION = 4096;
 
 async function getWebcamStream(facingMode = 'user') {
@@ -111,7 +110,7 @@ async function main() {
 				displayShader.updateUniforms({ u_nStrips: nStrips });
 				break;
 			case 'ArrowRight':
-				refractionIntensity = Math.min(MAX_REFRACTION_INTENSITY, refractionIntensity + 0.2);
+				refractionIntensity = refractionIntensity + 0.2;
 				displayShader.updateUniforms({ u_refractionIntensity: refractionIntensity });
 				break;
 			case 'ArrowLeft':
@@ -131,10 +130,7 @@ async function main() {
 	handleTouch(document.body, (direction, diff) => {
 		if (diff > 16) lastTapTime = 0;
 		if (direction === 'x') {
-			refractionIntensity = Math.max(
-				MIN_REFRACTION_INTENSITY,
-				Math.min(MAX_REFRACTION_INTENSITY, refractionIntensity + Math.sign(diff) / 8)
-			);
+			refractionIntensity = Math.max(MIN_REFRACTION_INTENSITY, refractionIntensity + Math.sign(diff) / 8);
 			displayShader.updateUniforms({ u_refractionIntensity: refractionIntensity });
 		} else {
 			nStrips = Math.max(MIN_N_STRIPS, nStrips - Math.sign(diff) * 2);
