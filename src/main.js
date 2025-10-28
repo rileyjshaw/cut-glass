@@ -130,7 +130,7 @@ async function main() {
 	handleTouch(document.body, (direction, diff) => {
 		if (diff > 16) lastTapTime = 0;
 		if (direction === 'x') {
-			refractionIntensity = Math.max(MIN_REFRACTION_INTENSITY, refractionIntensity + Math.sign(diff) / 8);
+			refractionIntensity = Math.max(MIN_REFRACTION_INTENSITY, refractionIntensity + Math.sign(diff) / 6);
 			displayShader.updateUniforms({ u_refractionIntensity: refractionIntensity });
 		} else {
 			nStrips = Math.max(MIN_N_STRIPS, nStrips - Math.sign(diff) * 2);
