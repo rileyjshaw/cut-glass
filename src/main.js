@@ -1,4 +1,4 @@
-import ShaderPad from 'shaderpad';
+import ShaderPad, { save } from 'shaderpad';
 import handleTouch from './handleTouch';
 import fragmentShaderSrc from './fragmentShader.glsl';
 
@@ -48,7 +48,7 @@ async function main() {
 	document.body.appendChild(displayCanvas);
 	const exportCanvas = document.createElement('canvas');
 	const [displayShader, exportShader] = [displayCanvas, exportCanvas].map(canvas => {
-		const shader = new ShaderPad(fragmentShaderSrc, { canvas });
+		const shader = new ShaderPad(fragmentShaderSrc, { canvas, plugins: [save] });
 		shader.initializeUniform('u_refractionIntensity', 'float', refractionIntensity);
 		shader.initializeUniform('u_nStrips', 'float', nStrips);
 		shader.initializeTexture('u_webcam', video);
